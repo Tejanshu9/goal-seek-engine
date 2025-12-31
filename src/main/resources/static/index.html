@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goal Seek Engine</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="app-container">
+    <!-- Animated Background -->
+    <div class="bg-grid"></div>
+    <div class="bg-glow"></div>
+
+    <!-- Navigation -->
+    <nav class="nav-bar">
+        <div class="logo">
+            <span class="logo-icon">∑</span>
+            <span class="logo-text">GoalSeek</span>
+        </div>
+        <div class="nav-tabs">
+            <button class="nav-tab active" data-tab="calculator">
+                <span class="tab-icon">⎯⟩</span>
+                Calculator
+            </button>
+            <button class="nav-tab" data-tab="formulas">
+                <span class="tab-icon">ƒ</span>
+                Formulas
+            </button>
+            <button class="nav-tab" data-tab="evaluate">
+                <span class="tab-icon">▷</span>
+                Evaluate
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Calculator Tab -->
+        <section id="calculator-tab" class="tab-content active">
+            <div class="section-header">
+                <h1>Goal Seek Calculator</h1>
+                <p class="subtitle">Find the input value that produces your target result</p>
+            </div>
+
+            <div class="calculator-layout">
+                <div class="form-card">
+                    <div class="card-header">
+                        <span class="card-icon">⚙</span>
+                        <h2>Configuration</h2>
+                    </div>
+
+                    <form id="goal-seek-form">
+                        <div class="form-group">
+                            <label for="formula-select">Formula</label>
+                            <select id="formula-select" required>
+                                <option value="">Select a formula...</option>
+                            </select>
+                        </div>
+
+                        <div id="formula-info" class="formula-info hidden">
+                            <div class="info-expression">
+                                <span class="label">Expression:</span>
+                                <code id="formula-expression"></code>
+                            </div>
+                            <div class="info-desc" id="formula-description"></div>
+                        </div>
+
+                        <div id="variables-container" class="variables-container hidden">
+                            <div class="form-group">
+                                <label for="seek-variable">Variable to Seek</label>
+                                <select id="seek-variable" required>
+                                    <option value="">Select variable...</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="target-value">Target Value</label>
+                                <input type="number" id="target-value" step="any" required placeholder="Enter target result">
+                            </div>
+
+                            <div class="known-values-section">
+                                <label>Known Values</label>
+                                <div id="known-values-inputs"></div>
+                            </div>
+
+                            <details class="advanced-options">
+                                <summary>Advanced Options</summary>
+                                <div class="options-grid">
+                                    <div class="form-group">
+                                        <label for="lower-bound">Lower Bound</label>
+                                        <input type="number" id="lower-bound" step="any" placeholder="Optional">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="upper-bound">Upper Bound</label>
+                                        <input type="number" id="upper-bound" step="any" placeholder="Optional">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="initial-guess">Initial Guess</label>
+                                        <input type="number" id="initial-guess" step="any" placeholder="Optional">
+                                    </div>
+                                </div>
+                            </details>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" id="calculate-btn" disabled>
+                            <span class="btn-icon">⟩</span>
+                            Calculate
+                        </button>
+                    </form>
+                </div>
+
+                <div class="result-card hidden" id="result-card">
+                    <div class="card-header">
+                        <span class="card-icon">✓</span>
+                        <h2>Result</h2>
+                    </div>
+
+                    <div class="result-content">
+                        <div class="result-main">
+                            <div class="result-value" id="result-value">—</div>
+                            <div class="result-label">Computed Value for <span id="result-variable"></span></div>
+                        </div>
+
+                        <div class="result-grid">
+                            <div class="result-item">
+                                <span class="result-item-label">Target</span>
+                                <span class="result-item-value" id="result-target">—</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-item-label">Achieved</span>
+                                <span class="result-item-value" id="result-achieved">—</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-item-label">Error</span>
+                                <span class="result-item-value" id="result-error">—</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-item-label">Iterations</span>
+                                <span class="result-item-value" id="result-iterations">—</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-item-label">Algorithm</span>
+                                <span class="result-item-value" id="result-algorithm">—</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-item-label">Status</span>
+                                <span class="result-item-value" id="result-status">—</span>
+                            </div>
+                        </div>
+
+                        <div class="result-all-values" id="result-all-values"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Formulas Tab -->
+        <section id="formulas-tab" class="tab-content">
+            <div class="section-header">
+                <h1>Formula Manager</h1>
+                <p class="subtitle">Create and manage your mathematical formulas</p>
+            </div>
+
+            <div class="formulas-layout">
+                <div class="form-card">
+                    <div class="card-header">
+                        <span class="card-icon">+</span>
+                        <h2 id="formula-form-title">Create Formula</h2>
+                    </div>
+
+                    <form id="formula-form">
+                        <input type="hidden" id="editing-formula-name">
+
+                        <div class="form-group">
+                            <label for="new-formula-name">Name</label>
+                            <input type="text" id="new-formula-name" required placeholder="e.g., compound_interest" minlength="2" maxlength="100">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="new-formula-expression">Expression</label>
+                            <textarea id="new-formula-expression" required placeholder="e.g., P * (1 + r/n)^(n*t)" maxlength="1000"></textarea>
+                            <span class="form-hint">Use standard math operators: +, -, *, /, ^, (), sqrt(), log(), etc.</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="new-formula-description">Description</label>
+                            <textarea id="new-formula-description" placeholder="Describe what this formula calculates..." maxlength="500"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="new-formula-output">Output Variable</label>
+                            <input type="text" id="new-formula-output" required placeholder="e.g., FV (Future Value)">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="new-formula-variables">Variables (comma-separated)</label>
+                            <input type="text" id="new-formula-variables" required placeholder="e.g., P, r, n, t">
+                            <span class="form-hint">List all variables used in the expression</span>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <span class="btn-icon">✓</span>
+                                <span id="formula-submit-text">Create Formula</span>
+                            </button>
+                            <button type="button" class="btn btn-secondary" id="cancel-edit-btn" style="display: none;">
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="formulas-list-card">
+                    <div class="card-header">
+                        <span class="card-icon">☰</span>
+                        <h2>Saved Formulas</h2>
+                        <button class="btn btn-icon" id="refresh-formulas-btn" title="Refresh">↻</button>
+                    </div>
+
+                    <div class="formulas-list" id="formulas-list">
+                        <div class="loading-state">Loading formulas...</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Evaluate Tab -->
+        <section id="evaluate-tab" class="tab-content">
+            <div class="section-header">
+                <h1>Formula Evaluator</h1>
+                <p class="subtitle">Test your formulas with specific values</p>
+            </div>
+
+            <div class="evaluate-layout">
+                <div class="form-card">
+                    <div class="card-header">
+                        <span class="card-icon">▷</span>
+                        <h2>Evaluate</h2>
+                    </div>
+
+                    <form id="evaluate-form">
+                        <div class="form-group">
+                            <label for="eval-formula-select">Formula</label>
+                            <select id="eval-formula-select" required>
+                                <option value="">Select a formula...</option>
+                            </select>
+                        </div>
+
+                        <div id="eval-formula-info" class="formula-info hidden">
+                            <div class="info-expression">
+                                <span class="label">Expression:</span>
+                                <code id="eval-formula-expression"></code>
+                            </div>
+                        </div>
+
+                        <div id="eval-variables-container" class="variables-container hidden">
+                            <div class="known-values-section">
+                                <label>Variable Values</label>
+                                <div id="eval-values-inputs"></div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" id="evaluate-btn" disabled>
+                            <span class="btn-icon">▷</span>
+                            Evaluate
+                        </button>
+                    </form>
+                </div>
+
+                <div class="result-card hidden" id="eval-result-card">
+                    <div class="card-header">
+                        <span class="card-icon">≡</span>
+                        <h2>Result</h2>
+                    </div>
+
+                    <div class="result-content">
+                        <div class="result-main">
+                            <div class="result-value" id="eval-result-value">—</div>
+                            <div class="result-label">Result for <span id="eval-result-formula"></span></div>
+                        </div>
+
+                        <div class="eval-input-summary" id="eval-input-summary"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
+
