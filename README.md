@@ -1,15 +1,27 @@
 # Goal Seek Engine
 
-A Spring Boot application that provides a **Goal Seek Engine** for financial calculations. This engine determines the input value required to achieve a specified outcome based on user-defined formulas.
+A full-stack financial calculation application that combines a powerful **Spring Boot backend** with a sleek **terminal-inspired frontend** to perform goal seek operations and manage mathematical formulas.
 
-## Features
+![Java](https://img.shields.io/badge/Java-17+-orange?style=flat-square)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-green?style=flat-square)
+![Theme](https://img.shields.io/badge/Theme-Cyberpunk%20Terminal-00ff9f?style=flat-square)
 
-- **Formula Management**: Create, read, update, and delete financial formulas with custom variables
-- **Goal Seek Calculation**: Find unknown variable values to achieve target outcomes
-- **Multiple Algorithms**: Uses Brent's method, Newton-Raphson, and Bisection for robust convergence
-- **Pre-loaded Formulas**: Includes common financial formulas (SIP, EMI, NPV, etc.)
-- **REST API**: Clean RESTful endpoints with OpenAPI documentation
-- **Swagger UI**: Interactive API documentation and testing
+## Live Demo
+
+🔗 **Application:** https://your-app-name.herokuapp.com
+
+
+## Overview
+
+The Goal Seek Engine determines what input value is required to achieve a specified outcome based on user-defined formulas. Perfect for financial planning, loan calculations, investment projections, and any scenario where you need to work backwards from a desired result.
+
+**Key Capabilities:**
+- 🎯 **Goal Seeking** - Find unknown variable values to achieve target outcomes
+- 📐 **Formula Management** - Create, read, update, and delete custom formulas
+- 🔬 **Formula Evaluation** - Test formulas with specific variable values
+- 🚀 **Multiple Algorithms** - Brent's method, Newton-Raphson, and Bisection for robust convergence
+- 🎨 **Modern UI** - Dark cyberpunk terminal-inspired interface
+- 📖 **Interactive Docs** - Built-in Swagger UI for API exploration
 
 ## Pre-loaded Financial Formulas
 
@@ -29,11 +41,11 @@ A Spring Boot application that provides a **Goal Seek Engine** for financial cal
 
 ### Prerequisites
 
-- Java 17 or higher
-- Maven 3.6+
+- **Java 17** or higher
+- **Maven 3.6+**
+- Modern web browser (Chrome 88+, Firefox 85+, Safari 14+)
 
 ### Build and Run
-
 ```bash
 # Clone or navigate to the project directory
 cd goal-seek-engine
@@ -45,54 +57,75 @@ mvn clean package
 mvn spring-boot:run
 ```
 
-The application starts on `http://localhost:8080`
+The application starts on **http://localhost:8080**
 
-### Access Swagger UI
+### Access the Application
 
-Open your browser and navigate to:
+- **Web Interface:** http://localhost:8080
+- **Swagger UI:** http://localhost:8080/swagger-ui.html
+- **H2 Console:** http://localhost:8080/h2-console
+
+## Features
+
+### 🎯 Goal Seek Calculator
+
+Find the input value needed to achieve your target outcome.
+
+**Example Use Cases:**
+- What monthly SIP achieves ₹10L in 10 years?
+- What interest rate results in ₹25K EMI?
+- What credit limit maintains 30% utilization?
+
+**How It Works:**
+1. Select a formula
+2. Choose which variable to solve for
+3. Enter your target value
+4. Provide known variable values
+5. Optionally set bounds and initial guess
+6. Get the computed value with convergence details
+
+### 📐 Formula Manager
+
+Full CRUD operations for mathematical formulas through both UI and API.
+
+**Create Custom Formulas:**
+```json
+{
+  "name": "CUSTOM_SAVINGS",
+  "expression": "P * (1 + r)^n + C * (((1 + r)^n - 1) / r)",
+  "description": "Savings with initial deposit and contributions",
+  "outputVariable": "FV",
+  "variables": ["P", "r", "n", "C"]
+}
 ```
-http://localhost:8080/swagger-ui.html
-```
 
-## API Endpoints
+### 🔬 Formula Evaluator
 
-### Formula Management
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/api/formulas` | Create a new formula |
-| `GET` | `/api/formulas` | Get all formulas |
-| `GET` | `/api/formulas/{name}` | Get formula by name |
-| `PUT` | `/api/formulas/{name}` | Update a formula |
-| `DELETE` | `/api/formulas/{name}` | Delete a formula |
-
-### Goal Seek
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/api/goal-seek` | Perform goal seek calculation |
-| `POST` | `/api/goal-seek/evaluate/{formulaName}` | Evaluate formula with values |
+Test any formula by providing values for all variables and seeing the computed result instantly.
 
 ## Usage Examples
 
-### 1. Create a Custom Formula
+### Web Interface
 
-```bash
-curl -X POST http://localhost:8080/api/formulas \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "CUSTOM_SAVINGS",
-    "expression": "P * (1 + r)^n + C * (((1 + r)^n - 1) / r)",
-    "description": "Savings with initial deposit and monthly contributions",
-    "outputVariable": "FV",
-    "variables": ["P", "r", "n", "C"]
-  }'
-```
+1. **Navigate to http://localhost:8080**
+2. **Goal Seek Tab**: 
+   - Select "SIP_FUTURE_VALUE"
+   - Set target value: `1000000`
+   - Choose seek variable: `P`
+   - Enter known values: `r = 0.01, n = 120`
+   - Click "Calculate"
+   - Result: ₹4,347.09 monthly investment needed
 
-### 2. Goal Seek: Find Monthly SIP for Target Corpus
+3. **Formula Manager Tab**:
+   - Click "Create New Formula"
+   - Fill in formula details
+   - Save and test immediately
 
-**Question**: What monthly SIP is needed to accumulate ₹10,00,000 in 10 years at 12% annual return?
+### API Examples
 
+#### 1. Goal Seek: Find Monthly SIP for Target Corpus
+
+**Question:** What monthly SIP is needed to accumulate ₹10,00,000 in 10 years at 12% annual return?
 ```bash
 curl -X POST http://localhost:8080/api/goal-seek \
   -H "Content-Type: application/json" \
@@ -109,7 +142,7 @@ curl -X POST http://localhost:8080/api/goal-seek \
   }'
 ```
 
-**Response**:
+**Response:**
 ```json
 {
   "success": true,
@@ -125,10 +158,9 @@ curl -X POST http://localhost:8080/api/goal-seek \
 }
 ```
 
-### 3. Goal Seek: Find Interest Rate for EMI Constraint
+#### 2. Goal Seek: Find Interest Rate for EMI Constraint
 
-**Question**: At what interest rate will EMI be ₹25,000 for a ₹20,00,000 loan over 20 years?
-
+**Question:** At what interest rate will EMI be ₹25,000 for a ₹20,00,000 loan over 20 years?
 ```bash
 curl -X POST http://localhost:8080/api/goal-seek \
   -H "Content-Type: application/json" \
@@ -145,27 +177,20 @@ curl -X POST http://localhost:8080/api/goal-seek \
   }'
 ```
 
-### 4. Goal Seek: Find Required Credit Limit
-
-**Question**: What credit limit is needed to maintain 30% utilization with ₹45,000 used?
-
+#### 3. Create Custom Formula
 ```bash
-curl -X POST http://localhost:8080/api/goal-seek \
+curl -X POST http://localhost:8080/api/formulas \
   -H "Content-Type: application/json" \
   -d '{
-    "formulaName": "CREDIT_UTILIZATION",
-    "knownValues": {
-      "UsedCredit": 45000
-    },
-    "seekVariable": "CreditLimit",
-    "targetValue": 30,
-    "lowerBound": 50000,
-    "upperBound": 500000
+    "name": "CUSTOM_SAVINGS",
+    "expression": "P * (1 + r)^n + C * (((1 + r)^n - 1) / r)",
+    "description": "Savings with initial deposit and monthly contributions",
+    "outputVariable": "FV",
+    "variables": ["P", "r", "n", "C"]
   }'
 ```
 
-### 5. Evaluate a Formula
-
+#### 4. Evaluate Formula
 ```bash
 curl -X POST http://localhost:8080/api/goal-seek/evaluate/EMI_CALCULATION \
   -H "Content-Type: application/json" \
@@ -176,117 +201,130 @@ curl -X POST http://localhost:8080/api/goal-seek/evaluate/EMI_CALCULATION \
   }'
 ```
 
-## Formula Expression Syntax
+## REST API Endpoints
 
-The engine uses **exp4j** for expression parsing. Supported operators and functions:
+### Formula Management
 
-### Operators
-- Arithmetic: `+`, `-`, `*`, `/`, `^` (power)
-- Parentheses: `(`, `)`
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/api/formulas` | Create a new formula |
+| `GET` | `/api/formulas` | Get all formulas |
+| `GET` | `/api/formulas/{name}` | Get formula by name |
+| `PUT` | `/api/formulas/{name}` | Update a formula |
+| `DELETE` | `/api/formulas/{name}` | Delete a formula |
 
-### Built-in Functions
-- `sqrt(x)`, `abs(x)`, `log(x)`, `log10(x)`
-- `sin(x)`, `cos(x)`, `tan(x)`
-- `exp(x)`, `pow(x, y)`
-- `min(x, y)`, `max(x, y)`
-- `floor(x)`, `ceil(x)`
+### Goal Seek Operations
 
-### Examples
-```
-# EMI Formula
-P * r * (1 + r)^n / ((1 + r)^n - 1)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/api/goal-seek` | Perform goal seek calculation |
+| `POST` | `/api/goal-seek/evaluate/{formulaName}` | Evaluate formula with values |
 
-# Compound Interest
-P * (1 + r/n)^(n*t)
+## Technology Stack
 
-# Present Value
-CF / (1 + r)^n
-```
+### Backend
+- **Spring Boot 3.x** - Application framework
+- **Spring Data JPA** - Database operations
+- **H2 Database** - In-memory database
+- **exp4j** - Expression parsing and evaluation
+- **SpringDoc OpenAPI** - API documentation
+- **Maven** - Build tool
 
-## Goal Seek Algorithms
+### Frontend
+- **HTML5** - Semantic markup
+- **CSS3** - Custom properties, Grid, Flexbox, animations
+- **Vanilla JavaScript** - ES6+, async/await, Fetch API
+- **Outfit & JetBrains Mono** - Typography
 
-The engine employs three numerical methods for finding roots:
-
-1. **Brent's Method** (Primary): Combines bisection, secant, and inverse quadratic interpolation. Most robust and efficient.
-
-2. **Newton-Raphson**: Uses numerical derivatives for fast convergence near the root.
-
-3. **Bisection**: Simple but reliable fallback method.
-
-The engine automatically tries multiple algorithms if the primary method fails.
+### Algorithms
+- **Brent's Method** - Primary algorithm (combines bisection, secant, inverse quadratic interpolation)
+- **Newton-Raphson** - Fast convergence with numerical derivatives
+- **Bisection** - Reliable fallback method
 
 ## Configuration
 
-Configure the goal seek behavior in `application.properties`:
-
+Edit `src/main/resources/application.properties`:
 ```properties
-# Maximum iterations for convergence
+# Server configuration
+server.port=8080
+
+# H2 Database
+spring.datasource.url=jdbc:h2:mem:goalseekdb
+spring.datasource.username=sa
+spring.datasource.password=
+
+# Goal Seek Settings
 goalseek.max-iterations=1000
-
-# Convergence tolerance
 goalseek.tolerance=1e-10
-
-# Default search bounds
 goalseek.default-lower-bound=-1000000
 goalseek.default-upper-bound=1000000
 ```
 
-## H2 Console
-
-Access the H2 database console at:
-```
-http://localhost:8080/h2-console
-```
-
-Connection details:
-- JDBC URL: `jdbc:h2:mem:goalseekdb`
-- Username: `sa`
-- Password: (empty)
-
 ## Project Structure
-
 ```
 goal-seek-engine/
-├── src/main/java/com/fintech/goalseek/
-│   ├── GoalSeekEngineApplication.java
-│   ├── algorithm/
-│   │   ├── GoalSeekAlgorithm.java
-│   │   ├── GoalSeekResult.java
-│   │   ├── BisectionAlgorithm.java
-│   │   ├── NewtonRaphsonAlgorithm.java
-│   │   └── BrentAlgorithm.java
-│   ├── config/
-│   │   ├── DataInitializer.java
-│   │   └── OpenApiConfig.java
-│   ├── controller/
-│   │   ├── FormulaController.java
-│   │   └── GoalSeekController.java
-│   ├── dto/
-│   │   ├── FormulaRequest.java
-│   │   ├── FormulaResponse.java
-│   │   ├── GoalSeekRequest.java
-│   │   ├── GoalSeekResponse.java
-│   │   └── ErrorResponse.java
-│   ├── entity/
-│   │   └── Formula.java
-│   ├── exception/
-│   │   ├── FormulaNotFoundException.java
-│   │   ├── FormulaDuplicateException.java
-│   │   ├── FormulaEvaluationException.java
-│   │   ├── GoalSeekException.java
-│   │   └── GlobalExceptionHandler.java
-│   ├── repository/
-│   │   └── FormulaRepository.java
-│   └── service/
-│       ├── FormulaService.java
-│       ├── FormulaEvaluator.java
-│       └── GoalSeekService.java
-├── src/main/resources/
-│   └── application.properties
+├── src/main/
+│   ├── java/com/fintech/goalseek/
+│   │   ├── GoalSeekEngineApplication.java
+│   │   ├── algorithm/
+│   │   │   ├── GoalSeekAlgorithm.java
+│   │   │   ├── GoalSeekResult.java
+│   │   │   ├── BisectionAlgorithm.java
+│   │   │   ├── NewtonRaphsonAlgorithm.java
+│   │   │   └── BrentAlgorithm.java
+│   │   ├── config/
+│   │   │   ├── DataInitializer.java
+│   │   │   └── OpenApiConfig.java
+│   │   ├── controller/
+│   │   │   ├── FormulaController.java
+│   │   │   └── GoalSeekController.java
+│   │   ├── dto/
+│   │   │   ├── FormulaRequest.java
+│   │   │   ├── FormulaResponse.java
+│   │   │   ├── GoalSeekRequest.java
+│   │   │   ├── GoalSeekResponse.java
+│   │   │   └── ErrorResponse.java
+│   │   ├── entity/
+│   │   │   └── Formula.java
+│   │   ├── exception/
+│   │   │   ├── FormulaNotFoundException.java
+│   │   │   ├── FormulaDuplicateException.java
+│   │   │   ├── FormulaEvaluationException.java
+│   │   │   ├── GoalSeekException.java
+│   │   │   └── GlobalExceptionHandler.java
+│   │   ├── repository/
+│   │   │   └── FormulaRepository.java
+│   │   └── service/
+│   │       ├── FormulaService.java
+│   │       ├── FormulaEvaluator.java
+│   │       └── GoalSeekService.java
+│   └── resources/
+│       ├── static/
+│       │   ├── index.html
+│       │   ├── styles.css
+│       │   └── script.js
+│       └── application.properties
 ├── pom.xml
 └── README.md
 ```
 
+## Design System
+
+### Color Palette (Dark Cyberpunk Terminal)
+
+| Variable | Value | Usage |
+|----------|-------|-------|
+| `--accent-primary` | `#00ff9f` | Primary actions, highlights |
+| `--accent-secondary` | `#00d4ff` | Secondary elements, links |
+| `--accent-tertiary` | `#ff6b9d` | Variable names, accents |
+| `--bg-deep` | `#0a0e14` | Page background |
+| `--bg-primary` | `#0d1117` | Card backgrounds |
+
+
+
 ## License
 
-Apache 2.0
+Apache License 2.0
+
+---
+
