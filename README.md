@@ -6,9 +6,15 @@ A full-stack financial calculation application that combines a powerful **Spring
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-green?style=flat-square)
 ![Theme](https://img.shields.io/badge/Theme-Cyberpunk%20Terminal-00ff9f?style=flat-square)
 
-## Live Demo
+## 🚀 Cloud Deployment
 
-🔗 **Application:** https://goal-seek-engine-mf5tpg.fly.dev/
+The Goal Seek Engine is successfully deployed on the cloud and accessible publicly.
+
+🌐 **Live URL:**  
+https://goal-seek-engine-mf5tpg.fly.dev
+
+The application is hosted on **Fly.io**, running inside a Docker container.
+
 
 
 ## Overview
