@@ -8,7 +8,7 @@ A full-stack financial calculation application that combines a powerful **Spring
 
 ## Live Demo
 
-🔗 **Application:** [https://your-app-name.herokuapp.com](https://goal-seek-engine-mf5tpg.fly.dev/)
+🔗 **Application:** [https://goal-seek-engine-mf5tpg.fly.dev/]
 
 
 ## Overview
