@@ -1,20 +1,18 @@
-# Use Java 17 JDK image
-FROM eclipse-temurin:17-jdk
-
-# Set working directory inside container
+# -------- Build stage --------
+FROM maven:3.9.9-eclipse-temurin-17 AS build
 WORKDIR /app
 
-# Copy Maven wrapper files (optional but good practice)
 COPY pom.xml .
+RUN mvn dependency:go-offline
 
-# Copy source code
 COPY src ./src
+RUN mvn clean package -DskipTests
 
-# Build the application
-RUN ./mvnw clean package -DskipTests || mvn clean package -DskipTests
+# -------- Runtime stage --------
+FROM eclipse-temurin:17-jre
+WORKDIR /app
 
-# Expose application port
+COPY --from=build /app/target/*.jar app.jar
+
 EXPOSE 8080
-
-# Run the Spring Boot application
-CMD ["java", "-jar", "target/goal-seek-engine-1.0.0.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
